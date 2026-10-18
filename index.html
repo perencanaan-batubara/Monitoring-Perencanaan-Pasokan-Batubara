@@ -1,0 +1,2115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Monitoring Perencanaan dan Pengadaan Batubara</title>
+
+  <style>
+    :root {
+      --navy: #123343;
+      --teal: #008578;
+      --blue: #347d9c;
+      --orange: #dda345;
+      --red: #cc7068;
+      --bg: #f2f6f8;
+      --ink: #203c49;
+      --muted: #70858e;
+      --line: #dce6ea;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 14px Arial, sans-serif;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+      padding: 10px 14px;
+      color: var(--ink);
+    }
+
+    button:hover { background: #eaf4f3; }
+
+    .primary {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: white;
+    }
+
+    .primary:hover { background: #006e65; }
+
+    aside {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: 235px;
+      padding: 26px 18px;
+      background: var(--navy);
+      color: white;
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .brand small {
+      display: block;
+      margin-top: 8px;
+      font-size: 10px;
+      letter-spacing: 1.2px;
+      color: #afc5ce;
+    }
+
+    nav {
+      display: grid;
+      gap: 8px;
+      margin-top: 35px;
+    }
+
+    nav button {
+      border: none;
+      color: #bed0d7;
+      background: transparent;
+      text-align: left;
+    }
+
+    nav button.active {
+      background: #255360;
+      color: white;
+    }
+
+    .side-note {
+      margin-top: 30px;
+      color: #a9c0cb;
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    main {
+      margin-left: 235px;
+      padding: 28px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 22px;
+    }
+
+    h1 { margin: 0 0 8px; font-size: 26px; }
+    h2 { margin: 0 0 10px; font-size: 18px; }
+    p { color: var(--muted); line-height: 1.6; }
+
+    .actions, .filters {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filters { margin: 22px 0; }
+
+    input, select, textarea {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: white;
+      color: var(--ink);
+    }
+
+    input[type="search"] {
+      min-width: 240px;
+      flex: 1;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 15px;
+      margin: 18px 0;
+    }
+
+    .card, .panel {
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 12px;
+      padding: 22px;
+    }
+
+    .card .label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      line-height: 1.5;
+    }
+
+    .card b {
+      display: block;
+      font-size: 28px;
+      margin: 12px 0;
+    }
+
+    .card small {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .card.dark { background: var(--navy); color: white; }
+    .card.dark .label, .card.dark small { color: #bed0d7; }
+
+    .panel { margin: 18px 0; }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .scroll { overflow: auto; }
+    .chart { min-width: 850px; width: 100%; display: block; }
+    .chart-item { cursor: pointer; }
+    .chart-item:hover rect { opacity: .75; }
+
+    .legend {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: var(--muted);
+      margin: 12px 0;
+    }
+
+    .legend i {
+      display: inline-block;
+      width: 11px;
+      height: 11px;
+      margin-right: 6px;
+      border-radius: 3px;
+    }
+
+    .notice, .help {
+      padding: 15px;
+      border-radius: 8px;
+      line-height: 1.7;
+      margin: 15px 0;
+    }
+
+    .notice { background: #fff4df; color: #8c692e; }
+    .help { background: #eaf5f2; color: #426b65; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #edf3f5;
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+    }
+
+    td.num {
+      text-align: right;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    td small {
+      display: block;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 5px;
+      font-size: 11px;
+      background: #e4f3ed;
+      color: #24765f;
+    }
+
+    .badge.warn { background: #fff0d8; color: #99681e; }
+
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 15px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    dialog {
+      border: none;
+      border-radius: 12px;
+      padding: 24px;
+      width: min(1100px, 95vw);
+      max-height: 90vh;
+      overflow: auto;
+      box-shadow: 0 20px 90px #0005;
+    }
+
+    dialog::backdrop { background: #102c3b99; }
+
+    .dialog-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 18px;
+    }
+
+    .form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .form label {
+      display: grid;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .form input, .form select, .form textarea { width: 100%; }
+    .wide { grid-column: 1 / -1; }
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      max-width: 500px;
+      padding: 16px 20px;
+      background: var(--navy);
+      color: white;
+      border-radius: 9px;
+      z-index: 100;
+      box-shadow: 0 5px 25px #0003;
+    }
+
+    .hidden { display: none !important; }
+
+    footer {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 25px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 1100px) {
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      header { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 750px) {
+      aside { position: static; width: auto; }
+      nav { display: flex; overflow: auto; margin-top: 18px; }
+      nav button { white-space: nowrap; }
+      .side-note { display: none; }
+      main { margin-left: 0; padding: 16px; }
+      h1 { font-size: 22px; }
+      .form { grid-template-columns: 1fr; }
+      .wide { grid-column: auto; }
+      .card { padding: 16px; }
+      .card b { font-size: 23px; }
+    }
+  </style>
+
+  <!-- Pembaca Excel: memerlukan internet untuk memuat pustaka ini. -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+</head>
+
+<body>
+  <aside>
+    <div class="brand">
+      REND BATUBARA
+      <small>PERENCANAAN DAN PENGADAAN</small>
+    </div>
+
+    <nav id="navigation">
+      <button data-tab="dashboard" class="active">Dashboard pengadaan</button>
+      <button data-tab="compliance">Kepatuhan konfirmasi</button>
+      <button data-tab="specification">Monitoring HRC / MRC / LRC</button>
+      <button data-tab="plants">Pemenuhan per PLTU</button>
+      <button data-tab="records">Data dan pengeditan</button>
+      <button data-tab="history">Riwayat perubahan</button>
+      <button data-tab="help">Petunjuk dan sinkronisasi</button>
+    </nav>
+
+    <div class="side-note">
+      VERSI MANDIRI<br>
+      Volume dalam metrik ton (MT)<br>
+      Penyimpanan: browser ini<br>
+      <span id="version"></span>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <div>
+        <h1 id="pageTitle">Dashboard pengadaan</h1>
+        <p id="storageStatus">Membuka penyimpanan browser...</p>
+      </div>
+
+      <div class="actions">
+        <button class="primary" onclick="document.getElementById('excelInput').click()">
+          Impor Excel
+        </button>
+        <button onclick="exportExcel()">Ekspor Excel</button>
+        <button onclick="exportJSON()">Cadangan JSON</button>
+        <button onclick="document.getElementById('jsonInput').click()">
+          Pulihkan JSON
+        </button>
+      </div>
+    </header>
+
+    <div class="filters">
+      <select id="yearFilter" aria-label="Tahun">
+        <option value="">Seluruh tahun</option>
+      </select>
+
+      <select id="specFilter" aria-label="Spesifikasi">
+        <option value="">Seluruh spesifikasi</option>
+        <option>HRC</option>
+        <option>MRC</option>
+        <option>LRC</option>
+      </select>
+
+      <input id="searchFilter" type="search"
+             placeholder="Cari sumber tambang atau PLTU..."
+             aria-label="Pencarian">
+    </div>
+
+    <div id="content"></div>
+
+    <footer>
+      Perubahan disimpan di browser, bukan ditulis ke file index.html.
+      Ekspor Excel atau JSON sebelum berpindah komputer atau membersihkan data browser.
+      Login dan database bersama memerlukan backend/server.
+    </footer>
+  </main>
+
+  <input id="excelInput" type="file" accept=".xlsx,.xls" multiple hidden>
+  <input id="jsonInput" type="file" accept=".json" hidden>
+
+  <dialog id="detailDialog">
+    <div class="dialog-head">
+      <h2 id="detailTitle">Rincian</h2>
+      <button onclick="document.getElementById('detailDialog').close()">Tutup</button>
+    </div>
+    <div id="detailContent"></div>
+  </dialog>
+
+  <dialog id="editDialog">
+    <div class="dialog-head">
+      <h2 id="editTitle">Ubah data</h2>
+      <button onclick="document.getElementById('editDialog').close()">Batal</button>
+    </div>
+    <form id="editForm">
+      <div id="editFields" class="form"></div>
+      <p id="editError" style="color:#b33"></p>
+      <div class="actions" style="margin-top:20px">
+        <button class="primary" type="submit">Simpan perubahan</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast hidden" role="status"></div>
+
+  <script>
+    "use strict";
+
+    /*
+      APLIKASI MONITORING BATUBARA
+
+      Jenis data:
+      need       = kebutuhan per PLTU
+      supply     = detail penugasan dan konfirmasi per PLTU
+      recap      = rekap proses kontrak per pemasok/spec
+      compliance = kepatuhan per surat penugasan
+      procurement= paket pengadaan
+
+      Tidak ada login semu di sisi browser.
+      Data bersama dan autentikasi harus ditangani backend.
+    */
+
+    const $ = id => document.getElementById(id);
+
+    const escapeHTML = value => String(value ?? "").replace(
+      /[&<>"']/g,
+      char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;",
+        '"': "&quot;", "'": "&#39;"
+      }[char])
+    );
+
+    const fmt = value =>
+      value === null || value === undefined || value === ""
+        ? "—"
+        : Number(value).toLocaleString("id-ID", {
+            maximumFractionDigits: 2
+          });
+
+    const million = value => fmt(Number(value || 0) / 1000000);
+    const numberOrNull = value =>
+      typeof value === "number" && Number.isFinite(value) ? value : null;
+
+    const sum = (rows, key) =>
+      rows.reduce((total, row) =>
+        total + (typeof row[key] === "number" ? row[key] : 0), 0);
+
+    const normalize = value => String(value || "")
+      .toUpperCase()
+      .replace(/\bPLTU\b/g, "")
+      .replace(/[^A-Z0-9]/g, "");
+
+    const isMine = value => /^(PT[ .]|CV[ .]|KOP|KONS|PD )/i
+      .test(String(value || "").trim());
+
+    const text = value => value === null || value === undefined
+      || String(value).startsWith("#") ? "" : String(value).trim();
+
+    const typeNames = {
+      need: "Kebutuhan tahunan",
+      supply: "Penugasan dan konfirmasi",
+      recap: "Rekap proses kontrak",
+      compliance: "Kepatuhan konfirmasi",
+      procurement: "Paket pengadaan"
+    };
+
+    const labels = {
+      year: "Tahun",
+      mine: "Sumber tambang",
+      plant: "PLTU / tujuan",
+      asset: "Aset",
+      aliases: "Nama alternatif PLTU, pisahkan dengan |",
+      spec: "Spesifikasi",
+      letter: "Surat penugasan",
+      assigned: "Penugasan (MT)",
+      confirmed: "Konfirmasi (MT)",
+      allocated: "Terkontrak dapat dialokasikan (MT)",
+      inProcess: "Dalam proses kontrak (MT)",
+      pending: "Belum dapat diproses (MT)",
+      rejected: "Tidak dapat diproses (MT)",
+      volume: "Volume pengadaan (MT)",
+      lrc: "Kebutuhan LRC (MT)",
+      mrc: "Kebutuhan MRC (MT)",
+      hrc: "Kebutuhan HRC (MT)",
+      stage: "Tahap pengadaan",
+      pic: "PIC",
+      note: "Keterangan / kendala"
+    };
+
+    const numericFields = [
+      "year", "assigned", "confirmed", "allocated", "inProcess",
+      "pending", "rejected", "volume", "lrc", "mrc", "hrc"
+    ];
+
+    const fields = {
+      need: ["year", "plant", "asset", "aliases", "lrc", "mrc", "hrc", "note"],
+      supply: [
+        "year", "mine", "plant", "asset", "spec",
+        "assigned", "confirmed", "note"
+      ],
+      recap: [
+        "year", "mine", "spec", "assigned", "confirmed",
+        "allocated", "inProcess", "pending", "rejected", "note"
+      ],
+      compliance: [
+        "year", "mine", "plant", "asset", "spec", "letter",
+        "assigned", "confirmed", "note"
+      ],
+      procurement: [
+        "year", "mine", "plant", "spec", "volume",
+        "stage", "pic", "note"
+      ]
+    };
+
+    const workflow = [
+      ["dd", "Due Diligence", "#8d82b0"],
+      ["rks", "Penyusunan RKS dan HPE", "#5296b4"],
+      ["execution", "Pelaksanaan Pengadaan", "#dda345"],
+      ["failed", "Pengadaan Gagal", "#cc7068"],
+      ["contract", "Kontrak", "#25895d"]
+    ];
+
+    const pipeline = [
+      ["need", "Kebutuhan", "#365c78"],
+      ["assigned", "Penugasan", "#347d9c"],
+      ["confirmed", "Konfirmasi", "#008578"],
+      ["allocated", "Terkontrak dapat dialokasikan", "#25895d"],
+      ["inProcess", "Dalam proses kontrak", "#67a8c8"],
+      ["pending", "Belum dapat diproses", "#dda345"],
+      ["rejected", "Tidak dapat diproses", "#cc7068"]
+    ];
+
+    let database;
+    let state = { version: 0, rows: [], history: [], updatedAt: null };
+    let tab = "dashboard";
+    let page = 0;
+    let editing = null;
+    let detailContext = null;
+    let linkedFile = null;
+    let linkedStamp = 0;
+    let linkedVersion = -1;
+    let syncing = false;
+
+    function toast(message) {
+      $("toast").textContent = message;
+      $("toast").classList.remove("hidden");
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(
+        () => $("toast").classList.add("hidden"), 6500
+      );
+    }
+
+    function openDatabase() {
+      return new Promise((resolve, reject) => {
+        if (!window.indexedDB) {
+          reject(new Error("Browser tidak mendukung IndexedDB."));
+          return;
+        }
+
+        const request = indexedDB.open("coal-monitoring-copy-paste-v1", 1);
+
+        request.onupgradeneeded = () => {
+          if (!request.result.objectStoreNames.contains("app")) {
+            request.result.createObjectStore("app");
+          }
+        };
+
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function readState() {
+      return new Promise((resolve, reject) => {
+        const transaction = database.transaction("app", "readonly");
+        const request = transaction.objectStore("app").get("state");
+
+        request.onsuccess = () => resolve(request.result || {
+          version: 0, rows: [], history: [], updatedAt: null
+        });
+
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function persist(next, expectedVersion) {
+      return new Promise((resolve, reject) => {
+        const transaction = database.transaction("app", "readwrite");
+        const store = transaction.objectStore("app");
+        const request = store.get("state");
+        let failure;
+
+        request.onsuccess = () => {
+          const current = request.result || { version: 0 };
+
+          if (current.version !== expectedVersion) {
+            failure = new Error(
+              "Data berubah di tab lain. Muat ulang sebelum menyimpan."
+            );
+            transaction.abort();
+            return;
+          }
+
+          store.put(next, "state");
+        };
+
+        transaction.oncomplete = resolve;
+        transaction.onabort = () => reject(
+          failure || new Error("Penyimpanan dibatalkan.")
+        );
+        transaction.onerror = () => reject(
+          failure || new Error("Penyimpanan browser gagal.")
+        );
+      });
+    }
+
+    function validate(row) {
+      if (!fields[row.type]) throw new Error("Jenis data tidak dikenal.");
+
+      if (!Number.isInteger(row.year) || row.year < 2000 || row.year > 2100) {
+        throw new Error("Tahun harus antara 2000 dan 2100.");
+      }
+
+      if (!text(row.type === "need" ? row.plant : row.mine)) {
+        throw new Error("Nama PLTU atau sumber tambang wajib diisi.");
+      }
+
+      if (row.spec && !["HRC", "MRC", "LRC"].includes(row.spec)) {
+        throw new Error("Spesifikasi harus HRC, MRC, atau LRC.");
+      }
+
+      for (const key of numericFields) {
+        const value = row[key];
+        if (value !== undefined && value !== null && value !== ""
+            && (!Number.isFinite(value) || value < 0)) {
+          throw new Error((labels[key] || key) + " harus angka positif atau nol.");
+        }
+      }
+    }
+
+    function canonical(row) {
+      const result = { type: row.type };
+
+      for (const key of fields[row.type]) {
+        result[key] = numericFields.includes(key)
+          ? row[key] === "" || row[key] === undefined ? null : row[key]
+          : text(row[key]);
+      }
+
+      return result;
+    }
+
+    async function applyChanges(changes, mode) {
+      const latest = await readState();
+      const map = new Map(latest.rows.map(row => [row.id, row]));
+      const seen = new Set();
+
+      for (const change of changes) {
+        validate(change.row);
+
+        if (seen.has(change.row.id)) throw new Error("Ada ID duplikat.");
+        seen.add(change.row.id);
+
+        const previous = map.get(change.row.id);
+
+        if ((previous?.rev || 0) !== change.expectedRev) {
+          throw new Error(
+            "Konflik versi pada " +
+            (change.row.mine || change.row.plant) +
+            ". Ekspor data terbaru dan tinjau perubahan."
+          );
+        }
+
+        if (previous && previous.type !== change.row.type) {
+          throw new Error("Jenis data suatu ID tidak boleh diubah.");
+        }
+      }
+
+      const now = new Date().toISOString();
+      const history = [...latest.history];
+
+      for (const change of changes) {
+        const previous = map.get(change.row.id);
+        const updated = {
+          ...change.row,
+          rev: (previous?.rev || 0) + 1,
+          updatedAt: now
+        };
+
+        map.set(updated.id, updated);
+
+        history.unshift({
+          at: now,
+          mode,
+          name: updated.mine || updated.plant,
+          type: updated.type,
+          note: fields[updated.type]
+            .filter(key =>
+              JSON.stringify(previous?.[key] ?? null) !==
+              JSON.stringify(updated[key] ?? null)
+            )
+            .map(key => labels[key] || key)
+            .join(", ")
+        });
+      }
+
+      const next = {
+        ...latest,
+        rows: [...map.values()],
+        version: latest.version + 1,
+        updatedAt: now,
+        history: history.slice(0, 400)
+      };
+
+      await persist(next, latest.version);
+      state = next;
+      refreshFilters();
+      render();
+    }
+
+    function selected(type, useSearch = false) {
+      const year = $("yearFilter").value;
+      const spec = $("specFilter").value;
+      const query = $("searchFilter").value.trim().toLowerCase();
+
+      return state.rows.filter(row =>
+        row.type === type &&
+        (!year || row.year === Number(year)) &&
+        (!spec || type === "need" || row.spec === spec) &&
+        (!useSearch || !query ||
+          [row.mine, row.plant, row.note, row.letter]
+            .join(" ").toLowerCase().includes(query))
+      );
+    }
+
+    function refreshFilters() {
+      const current = $("yearFilter").value;
+      const years = [...new Set(state.rows.map(row => row.year))].sort();
+
+      $("yearFilter").innerHTML =
+        '<option value="">Seluruh tahun</option>' +
+        years.map(year =>
+          `<option value="${year}">${year}</option>`
+        ).join("");
+
+      if (years.includes(Number(current))) {
+        $("yearFilter").value = current;
+      } else if (!current && years.includes(2026)) {
+        $("yearFilter").value = "2026";
+      }
+
+      $("version").textContent = "Versi data " + state.version;
+      $("storageStatus").textContent =
+        `${state.rows.length.toLocaleString("id-ID")} baris · ` +
+        "tersimpan di browser ini" +
+        (state.updatedAt
+          ? " · " + new Date(state.updatedAt).toLocaleString("id-ID")
+          : "");
+    }
+
+    function card(label, value, dark = false) {
+      return `<div class="card ${dark ? "dark" : ""}">
+        <div class="label">${escapeHTML(label)}</div>
+        <b>${million(value)}</b><small>juta MT</small>
+      </div>`;
+    }
+
+    function table(headers, body) {
+      return `<div class="scroll"><table>
+        <thead><tr>${headers.map(header =>
+          `<th>${escapeHTML(header)}</th>`
+        ).join("")}</tr></thead>
+        <tbody>${body || `<tr><td colspan="${headers.length}">
+          Tidak ada data.
+        </td></tr>`}</tbody>
+      </table></div>`;
+    }
+
+    function pipelineData() {
+      const recap = selected("recap");
+      const source = recap.length ? recap : selected("supply");
+      const needs = selected("need");
+      const spec = $("specFilter").value;
+      const needKeys = spec ? [spec.toLowerCase()] : ["lrc", "mrc", "hrc"];
+
+      const totals = {
+        need: needs.reduce((total, row) =>
+          total + needKeys.reduce((n, key) =>
+            n + Number(row[key] || 0), 0), 0),
+        assigned: sum(source, "assigned"),
+        confirmed: sum(source, "confirmed"),
+        allocated: sum(recap, "allocated"),
+        inProcess: sum(recap, "inProcess"),
+        pending: sum(recap, "pending"),
+        rejected: sum(recap, "rejected")
+      };
+
+      return {
+        totals, source, recap, needs, needKeys,
+        residual: totals.confirmed - totals.allocated -
+          totals.inProcess - totals.pending - totals.rejected
+      };
+    }
+
+    function waterfall(data) {
+      const width = 1120, height = 420;
+      const left = 80, top = 45, bottom = 315;
+      const step = 145, barWidth = 92;
+      let running = 0;
+
+      const segments = pipeline.map(([key, label, color], index) => {
+        const value = data.totals[key];
+        const start = index < 3 ? 0 : running;
+        const end = index < 3 ? value : running + value;
+
+        if (index >= 3) running = end;
+
+        return { key, label, color, value, start, end };
+      });
+
+      const maximum = Math.max(1, ...segments.map(segment => segment.end));
+      const y = value => bottom - value / maximum * (bottom - top);
+
+      let svg = `<svg class="chart" viewBox="0 0 ${width} ${height}"
+        role="img" aria-label="Waterfall pengadaan ke atas">`;
+
+      for (let index = 0; index <= 4; index++) {
+        const value = maximum * index / 4;
+
+        svg += `<line x1="${left}" y1="${y(value)}"
+          x2="1100" y2="${y(value)}" stroke="#e2e9ec"/>
+          <text x="${left - 10}" y="${y(value) + 4}"
+            text-anchor="end" fill="#70858e" font-size="11">
+            ${million(value)}
+          </text>`;
+      }
+
+      svg += `<text x="${left}" y="20" font-size="11"
+        fill="#70858e">juta MT</text>`;
+
+      segments.forEach((segment, index) => {
+        const x = left + index * step + 24;
+        const topY = y(segment.end);
+        const barHeight = Math.max(3, y(segment.start) - topY);
+
+        if (index > 3) {
+          svg += `<line x1="${x - step + barWidth}" y1="${y(segment.start)}"
+            x2="${x}" y2="${y(segment.start)}"
+            stroke="#8ea6af" stroke-dasharray="4 3"/>`;
+        }
+
+        svg += `<g class="chart-item" data-detail="pipeline:${segment.key}"
+          role="button" tabindex="0">
+          <title>${escapeHTML(segment.label)}:
+            ${fmt(segment.value)} MT</title>
+          <rect x="${x}" y="${topY}" width="${barWidth}"
+            height="${barHeight}" rx="3" fill="${segment.color}"/>
+          <text x="${x + barWidth / 2}" y="${topY - 10}"
+            text-anchor="middle" font-size="13" font-weight="bold"
+            fill="#244856">${million(segment.value)}</text>
+          <text x="${x + barWidth / 2}" y="345"
+            text-anchor="middle" font-size="11" fill="#244856">`;
+
+        const words = segment.label.split(" ");
+        const first = words.length > 2
+          ? words.slice(0, 2).join(" ") : segment.label;
+        const second = words.length > 2
+          ? words.slice(2).join(" ") : "";
+
+        svg += `<tspan x="${x + barWidth / 2}">${escapeHTML(first)}</tspan>
+          <tspan x="${x + barWidth / 2}" dy="16">${escapeHTML(second)}</tspan>
+          </text>
+          <rect x="${x - 10}" y="325" width="${barWidth + 20}"
+            height="55" fill="transparent"/>
+        </g>`;
+      });
+
+      return svg + "</svg>";
+    }
+
+    function workflowChart() {
+      const rows = selected("procurement");
+      const maximum = Math.max(
+        1,
+        ...workflow.map(([key]) =>
+          sum(rows.filter(row => row.stage === key), "volume"))
+      );
+
+      let svg = `<svg class="chart" viewBox="0 0 1000 340"
+        role="img" aria-label="Tahapan pengadaan">`;
+
+      workflow.forEach(([key, label, color], index) => {
+        const subset = rows.filter(row => row.stage === key);
+        const volume = sum(subset, "volume");
+        const y = 25 + index * 58;
+        const width = volume / maximum * 510;
+
+        svg += `<g class="chart-item" data-detail="workflow:${key}"
+          role="button" tabindex="0">
+          <title>${escapeHTML(label)}: ${fmt(volume)} MT,
+            ${subset.length} paket</title>
+          <text x="255" y="${y + 16}" text-anchor="end"
+            font-size="12" fill="#244856">${escapeHTML(label)}</text>
+          <rect x="275" y="${y}" width="${Math.max(3, width)}"
+            height="25" rx="4" fill="${color}"/>
+          <text x="${285 + width}" y="${y + 17}"
+            font-size="11" fill="#486976">
+            ${million(volume)} jt · ${subset.length} paket
+          </text>
+        </g>`;
+      });
+
+      return svg + "</svg>";
+    }
+
+    function dashboard() {
+      const data = pipelineData();
+      const totals = data.totals;
+      const packages = selected("procurement");
+      const unstarted = packages.filter(row =>
+        !workflow.some(([key]) => key === row.stage));
+
+      return `<div class="cards">
+        ${card("Kebutuhan", totals.need, true)}
+        ${card("Penugasan", totals.assigned)}
+        ${card("Konfirmasi", totals.confirmed)}
+        ${card("Terkontrak dapat dialokasikan", totals.allocated)}
+      </div>
+
+      <section class="panel">
+        <h2>Perencanaan pasokan dan status pengadaan</h2>
+        <p>Klik setiap batang untuk membuka rinciannya.</p>
+        <div class="scroll">${waterfall(data)}</div>
+
+        <div class="help">
+          Kebutuhan, penugasan, dan konfirmasi merupakan pembanding.
+          Empat status berikutnya diakumulasikan naik dari nol.
+          Penugasan dan konfirmasi menggunakan Summary jika tersedia;
+          jika belum, menggunakan detail Gabungan.
+        </div>
+
+        ${Math.abs(data.residual) > 1 && data.recap.length
+          ? `<div class="notice">
+              Selisih konfirmasi terhadap jumlah empat status:
+              ${fmt(data.residual)} MT.
+              <button data-detail="pipeline:reconcile">Lihat rincian</button>
+            </div>`
+          : ""}
+      </section>
+
+      <section class="panel">
+        <h2>Proses pengadaan batubara</h2>
+        <p>Volume dari tabel Pengadaan Batubara.
+          Setiap paket dihitung hanya pada satu tahap.</p>
+
+        <div class="scroll">${workflowChart()}</div>
+
+        <div class="actions">
+          ${workflow.map(([key, label]) =>
+            `<button data-detail="workflow:${key}">
+              ${escapeHTML(label)}
+            </button>`
+          ).join("")}
+        </div>
+
+        <p>
+          ${packages.length} paket pengadaan.
+          ${unstarted.length} paket belum masuk lima tahap atau belum dapat diproses.
+          Cakupan paket pengadaan berbeda dari rekap konfirmasi tahunan.
+        </p>
+
+        ${unstarted.length
+          ? `<button data-detail="workflow:unstarted">
+              Lihat paket belum masuk tahap
+            </button>`
+          : ""}
+      </section>`;
+    }
+
+    function compliancePage() {
+      const rows = selected("compliance", true);
+      const letters = [
+        "B-1839 & B-334", "B-755", "B-905", "B-1282", "B-1819"
+      ];
+
+      const groups = letters.map(letter => {
+        const subset = rows.filter(row => row.letter === letter);
+        return {
+          letter,
+          assigned: sum(subset, "assigned"),
+          confirmed: sum(subset, "confirmed")
+        };
+      });
+
+      const maximum = Math.max(
+        1, ...groups.flatMap(group => [group.assigned, group.confirmed])
+      );
+
+      let svg = `<svg class="chart" viewBox="0 0 1050 370"
+        role="img" aria-label="Kepatuhan konfirmasi terhadap penugasan">`;
+
+      groups.forEach((group, index) => {
+        const x = 65 + index * 195;
+        const base = 285;
+        const plannedHeight = group.assigned / maximum * 210;
+        const confirmedHeight = group.confirmed / maximum * 210;
+        const percentage = group.assigned
+          ? fmt(group.confirmed / group.assigned * 100) + "%" : "—";
+
+        svg += `<g class="chart-item"
+          data-detail="compliance:${escapeHTML(group.letter)}"
+          role="button" tabindex="0">
+          <title>${escapeHTML(group.letter)}:
+            ${fmt(group.confirmed)} / ${fmt(group.assigned)} MT</title>
+          <rect x="${x}" y="${base - plannedHeight}" width="95"
+            height="${Math.max(2, plannedHeight)}" fill="#196e8e"/>
+          <rect x="${x}" y="${base - confirmedHeight}" width="95"
+            height="${Math.max(2, confirmedHeight)}" fill="#e98537"/>
+          <text x="${x + 47}" y="${base - Math.max(
+            plannedHeight, confirmedHeight
+          ) - 12}" text-anchor="middle" font-size="12" fill="#244856">
+            ${million(group.confirmed)} / ${million(group.assigned)} jt
+          </text>
+          <text x="${x + 47}" y="${base - 12}" text-anchor="middle"
+            font-size="20" font-weight="bold" fill="#153b4d">
+            ${percentage}
+          </text>
+          <text x="${x + 47}" y="315" text-anchor="middle"
+            font-size="12" fill="#244856">${escapeHTML(group.letter)}</text>
+        </g>`;
+      });
+
+      return `<section class="panel">
+        <h2>Kepatuhan konfirmasi terhadap penugasan</h2>
+        <div class="legend">
+          <span><i style="background:#196e8e"></i>Penugasan</span>
+          <span><i style="background:#e98537"></i>Konfirmasi</span>
+        </div>
+        <div class="scroll">${svg}</svg></div>
+        <p>
+          Angka pada batang: konfirmasi / penugasan.
+          Persentase = konfirmasi ÷ penugasan.
+          Klik nomor surat untuk rincian sumber tambang dan PLTU.
+        </p>
+      </section>`;
+    }
+
+    function specificationPage() {
+      const specs = $("specFilter").value
+        ? [$("specFilter").value] : ["HRC", "MRC", "LRC"];
+
+      const recap = selected("recap");
+      const source = recap.length ? recap : selected("supply");
+      const needs = selected("need");
+      const packages = selected("procurement");
+
+      const body = specs.map(spec => {
+        const subset = source.filter(row => row.spec === spec);
+        const statusRows = recap.filter(row => row.spec === spec);
+        const need = needs.reduce((n, row) =>
+          n + Number(row[spec.toLowerCase()] || 0), 0);
+
+        return `<tr><td><b>${spec}</b></td>
+          <td class="num">${fmt(need)}</td>
+          <td class="num">${fmt(sum(subset, "assigned"))}</td>
+          <td class="num">${fmt(sum(subset, "confirmed"))}</td>
+          ${["allocated", "inProcess", "pending", "rejected"].map(key =>
+            `<td class="num">${fmt(sum(statusRows, key))}</td>`
+          ).join("")}</tr>`;
+      }).join("");
+
+      const workflowBody = [
+        ...workflow,
+        ["unstarted", "Belum masuk tahap / belum diproses"]
+      ].map(([key, label]) => `<tr>
+        <td>${escapeHTML(label)}</td>
+        ${specs.map(spec => {
+          const subset = packages.filter(row =>
+            row.spec === spec && row.stage === key);
+          return `<td>
+            <button data-detail="workflow:${key}:${spec}">
+              ${fmt(sum(subset, "volume"))} MT
+            </button><small>${subset.length} paket</small>
+          </td>`;
+        }).join("")}
+      </tr>`).join("");
+
+      return `<section class="panel">
+        <h2>Monitoring berdasarkan spesifikasi</h2>
+        ${table([
+          "Spec", "Kebutuhan (MT)", "Penugasan (MT)", "Konfirmasi (MT)",
+          "Terkontrak dapat dialokasikan", "Dalam proses kontrak",
+          "Belum dapat diproses", "Tidak dapat diproses"
+        ], body)}
+      </section>
+      <section class="panel">
+        <h2>Proses pengadaan per spesifikasi</h2>
+        ${table(["Tahap", ...specs], workflowBody)}
+      </section>`;
+    }
+
+    function plantRows() {
+      const needs = selected("need");
+      const supplies = selected("supply");
+      const aliases = new Map();
+
+      for (const row of needs) {
+        const canonicalName = normalize(row.plant);
+        for (const name of [row.plant, ...text(row.aliases).split("|")]) {
+          if (name) aliases.set(row.year + "|" + normalize(name), canonicalName);
+        }
+      }
+
+      const groups = new Map();
+
+      function group(row) {
+        const name = aliases.get(row.year + "|" + normalize(row.plant))
+          || normalize(row.plant);
+        const key = row.year + "|" + name;
+
+        if (!groups.has(key)) {
+          groups.set(key, {
+            key, year: row.year, plant: row.plant, asset: row.asset || "",
+            needs: [], supplies: []
+          });
+        }
+
+        return groups.get(key);
+      }
+
+      for (const row of needs) {
+        const result = group(row);
+        result.plant = row.plant;
+        result.asset = row.asset || result.asset;
+        result.needs.push(row);
+      }
+
+      for (const row of supplies) group(row).supplies.push(row);
+
+      const query = $("searchFilter").value.trim().toLowerCase();
+      const keys = $("specFilter").value
+        ? [$("specFilter").value.toLowerCase()] : ["lrc", "mrc", "hrc"];
+
+      return [...groups.values()].map(group => {
+        const complete = group.needs.length === 1 &&
+          keys.every(key => typeof group.needs[0][key] === "number");
+
+        const need = complete
+          ? keys.reduce((n, key) => n + group.needs[0][key], 0) : null;
+
+        const confirmed = sum(group.supplies, "confirmed");
+        const missing = group.supplies.some(row =>
+          typeof row.confirmed !== "number");
+
+        return {
+          ...group,
+          need,
+          assigned: sum(group.supplies, "assigned"),
+          confirmed,
+          shortage: need === null || missing
+            ? null : Math.max(0, need - confirmed),
+          percentage: need > 0 && !missing ? confirmed / need * 100 : null,
+          status: need === null ? "Kebutuhan belum tersedia"
+            : missing ? "Konfirmasi belum lengkap"
+            : need === 0 ? "Kebutuhan nol"
+            : confirmed >= need ? "Volume terpenuhi" : "Belum terpenuhi"
+        };
+      }).filter(group => !query ||
+        [group.plant, group.asset].join(" ").toLowerCase().includes(query)
+      ).sort((a, b) => (b.shortage ?? -1) - (a.shortage ?? -1));
+    }
+
+    function plantsPage() {
+      const rows = plantRows();
+
+      return `<section class="panel">
+        <h2>Monitoring pemenuhan per PLTU</h2>
+        <div class="help">
+          Pemenuhan = konfirmasi ÷ kebutuhan.
+          Kekurangan suatu PLTU tidak dikurangi surplus PLTU lain.
+          Pilih HRC, MRC, atau LRC untuk memeriksa kecukupan spesifikasi.
+        </div>
+        ${table([
+          "PLTU", "Aset", "Kebutuhan", "Penugasan", "Konfirmasi",
+          "Kekurangan", "Pemenuhan", "Status", "Rincian"
+        ], rows.map(row => `<tr>
+          <td><b>${escapeHTML(row.plant)}</b><small>${row.year}</small></td>
+          <td>${escapeHTML(row.asset)}</td>
+          <td class="num">${fmt(row.need)}</td>
+          <td class="num">${fmt(row.assigned)}</td>
+          <td class="num">${fmt(row.confirmed)}</td>
+          <td class="num">${fmt(row.shortage)}</td>
+          <td class="num">${row.percentage === null
+            ? "—" : fmt(row.percentage) + "%"}</td>
+          <td><span class="badge ${row.shortage > 0 ? "warn" : ""}">
+            ${escapeHTML(row.status)}</span></td>
+          <td><button data-plant="${escapeHTML(row.key)}">Detail</button></td>
+        </tr>`).join(""))}
+      </section>`;
+    }
+
+    function recordsPage() {
+      const query = $("searchFilter").value.trim().toLowerCase();
+      const year = $("yearFilter").value;
+      const spec = $("specFilter").value;
+
+      const rows = state.rows.filter(row =>
+        (!year || row.year === Number(year)) &&
+        (!spec || row.type === "need" || row.spec === spec) &&
+        (!query || [row.mine, row.plant, row.note]
+          .join(" ").toLowerCase().includes(query))
+      );
+
+      const body = rows.slice(page * 30, page * 30 + 30).map(row =>
+        `<tr>
+          <td>${escapeHTML(typeNames[row.type])}</td>
+          <td>${row.year}</td>
+          <td>${escapeHTML(row.mine || row.plant)}</td>
+          <td>${escapeHTML(row.type === "need" ? row.asset : row.plant)}</td>
+          <td>${escapeHTML(row.spec || "")}</td>
+          <td>${escapeHTML(row.note || "")}</td>
+          <td><button data-edit="${escapeHTML(row.id)}">Ubah</button></td>
+        </tr>`
+      ).join("");
+
+      return `<section class="panel">
+        <div class="panel-head">
+          <h2>Data dan pengeditan</h2>
+          <button class="primary" onclick="newRecord()">Tambah data</button>
+        </div>
+        ${table(["Jenis", "Tahun", "Nama", "Tujuan / aset", "Spec", "Catatan", ""], body)}
+        <div class="pagination">
+          <span>${rows.length} baris · halaman ${page + 1}</span>
+          <div class="actions">
+            <button onclick="changePage(-1)" ${page === 0 ? "disabled" : ""}>
+              Sebelumnya
+            </button>
+            <button onclick="changePage(1)"
+              ${(page + 1) * 30 >= rows.length ? "disabled" : ""}>
+              Berikutnya
+            </button>
+          </div>
+        </div>
+      </section>`;
+    }
+
+    function historyPage() {
+      return `<section class="panel"><h2>Riwayat perubahan</h2>
+        ${table(["Waktu", "Melalui", "Data", "Kolom berubah"],
+          state.history.map(row => `<tr>
+            <td>${new Date(row.at).toLocaleString("id-ID")}</td>
+            <td>${escapeHTML(row.mode)}</td>
+            <td>${escapeHTML(row.name)}</td>
+            <td>${escapeHTML(row.note)}</td>
+          </tr>`).join(""))}
+      </section>`;
+    }
+
+    function helpPage() {
+      return `<section class="panel">
+        <h2>Petunjuk penggunaan</h2>
+        <ol style="line-height:2">
+          <li>Impor ketiga file Excel sumber.</li>
+          <li>Gunakan dashboard, filter tahun, dan filter spesifikasi.</li>
+          <li>Klik chart untuk melihat rincian.</li>
+          <li>Ubah data melalui menu Data dan pengeditan.</li>
+          <li>Ekspor Excel untuk pembaruan di luar aplikasi.</li>
+          <li>Jangan ubah kolom id, type, rev, dan _base pada hasil ekspor.</li>
+          <li>Impor kembali Excel setelah selesai diedit.</li>
+        </ol>
+
+        <h2>Sinkronisasi Excel lokal</h2>
+        <p>
+          Tautkan hanya Excel hasil ekspor aplikasi ini.
+          Selama halaman terbuka, file diperiksa setiap 15 detik.
+          Perubahan Excel harus disimpan terlebih dahulu.
+          Tutup Excel bila file terkunci saat aplikasi menulis.
+        </p>
+
+        <div class="actions">
+          <button class="primary" onclick="linkExcel()">Tautkan Excel</button>
+          <button onclick="unlinkExcel()">Putuskan tautan</button>
+        </div>
+
+        <p>${linkedFile
+          ? "File tertaut: " + escapeHTML(linkedFile.name)
+          : "Belum ada file tertaut."}</p>
+
+        <div class="notice">
+          File ini tidak menyediakan login atau database bersama.
+          IndexedDB menyimpan data hanya pada browser/profil yang digunakan.
+          Gunakan cadangan JSON untuk memindahkan seluruh data.
+        </div>
+      </section>`;
+    }
+
+    function render() {
+      const titles = {
+        dashboard: "Dashboard proses pengadaan",
+        compliance: "Kepatuhan konfirmasi",
+        specification: "Monitoring HRC / MRC / LRC",
+        plants: "Pemenuhan per PLTU",
+        records: "Data dan pengeditan",
+        history: "Riwayat perubahan",
+        help: "Petunjuk dan sinkronisasi"
+      };
+
+      $("pageTitle").textContent = titles[tab];
+      $("searchFilter").classList.toggle(
+        "hidden",
+        ["dashboard", "specification", "history", "help"].includes(tab)
+      );
+
+      document.querySelectorAll("[data-tab]").forEach(button =>
+        button.classList.toggle("active", button.dataset.tab === tab)
+      );
+
+      const views = {
+        dashboard, compliance: compliancePage,
+        specification: specificationPage, plants: plantsPage,
+        records: recordsPage, history: historyPage, help: helpPage
+      };
+
+      $("content").innerHTML =
+        (!state.rows.length
+          ? `<div class="notice">
+              Belum ada data. Klik Impor Excel dan pilih file sumber.
+            </div>` : "") + views[tab]();
+    }
+
+    function changePage(direction) {
+      page = Math.max(0, page + direction);
+      render();
+    }
+
+    function detailRows(key) {
+      const parts = key.split(":");
+
+      if (parts[0] === "workflow") {
+        return selected("procurement").filter(row =>
+          row.stage === parts[1] && (!parts[2] || row.spec === parts[2])
+        );
+      }
+
+      if (parts[0] === "compliance") {
+        return selected("compliance", true).filter(row =>
+          row.letter === parts.slice(1).join(":"));
+      }
+
+      const data = pipelineData();
+      const metric = parts[1];
+
+      if (metric === "need") {
+        return data.needs.filter(row =>
+          data.needKeys.some(k => typeof row[k] === "number"));
+      }
+
+      if (["assigned", "confirmed"].includes(metric)) {
+        return data.source.filter(row => Number(row[metric] || 0) !== 0);
+      }
+
+      if (metric === "reconcile") {
+        return data.recap.filter(row =>
+          Math.abs(Number(row.confirmed || 0) -
+            ["allocated", "inProcess", "pending", "rejected"].reduce(
+              (n, k) => n + Number(row[k] || 0), 0)) > 0.01);
+      }
+
+      return data.recap.filter(row => Number(row[metric] || 0) !== 0);
+    }
+
+    function openDetail(key) {
+      detailContext = key;
+      const rows = detailRows(key);
+      const parts = key.split(":");
+
+      const title = parts[0] === "workflow"
+        ? workflow.find(([stage]) => stage === parts[1])?.[1] ||
+          "Belum masuk tahap"
+        : parts[0] === "compliance"
+          ? parts.slice(1).join(":")
+          : pipeline.find(([stage]) => stage === parts[1])?.[1] ||
+            "Rekonsiliasi";
+
+      showDetailTable(title, rows);
+    }
+
+    function showDetailTable(title, rows) {
+      $("detailTitle").textContent = title;
+
+      $("detailContent").innerHTML =
+        `<p>${rows.length} baris rincian.</p>` +
+        table([
+          "Sumber tambang / PLTU", "Tujuan", "Spec", "Penugasan",
+          "Konfirmasi", "Volume / alokasi", "Tahap / catatan", ""
+        ], rows.map(row => `<tr>
+          <td>${escapeHTML(row.mine || row.plant)}</td>
+          <td>${escapeHTML(row.plant || row.asset || "")}</td>
+          <td>${escapeHTML(row.spec || "")}</td>
+          <td class="num">${fmt(row.assigned)}</td>
+          <td class="num">${fmt(row.confirmed)}</td>
+          <td class="num">${fmt(row.volume ?? row.allocated)}</td>
+          <td>${escapeHTML(
+            workflow.find(([key]) => key === row.stage)?.[1] || row.note || ""
+          )}<small>${escapeHTML(row.source || "")}</small></td>
+          <td><button data-edit="${escapeHTML(row.id)}">Ubah</button></td>
+        </tr>`).join(""));
+
+      $("detailDialog").showModal();
+    }
+
+    function newRecord() {
+      const choice = prompt(
+        "Jenis data:\n1. Kebutuhan\n2. Penugasan/konfirmasi\n" +
+        "3. Rekap proses kontrak\n4. Kepatuhan\n5. Paket pengadaan",
+        "5"
+      );
+
+      const type = {
+        "1": "need", "2": "supply", "3": "recap",
+        "4": "compliance", "5": "procurement"
+      }[choice];
+
+      if (type) openEdit(null, type);
+    }
+
+    function openEdit(id, type) {
+      $("detailDialog").close();
+
+      editing = id
+        ? structuredClone(state.rows.find(row => row.id === id))
+        : {
+            id: crypto.randomUUID(), type,
+            year: Number($("yearFilter").value) || 2026,
+            rev: 0, source: "Input web"
+          };
+
+      $("editTitle").textContent = typeNames[editing.type];
+      $("editError").textContent = "";
+
+      $("editFields").innerHTML = fields[editing.type].map(key => {
+        const value = editing[key] ?? "";
+        let input;
+
+        if (key === "spec") {
+          input = `<select name="${key}">
+            <option value="">Belum diisi</option>
+            ${["HRC", "MRC", "LRC"].map(spec =>
+              `<option ${value === spec ? "selected" : ""}>${spec}</option>`
+            ).join("")}
+          </select>`;
+        } else if (key === "stage") {
+          input = `<select name="${key}">
+            ${[...workflow, ["unstarted", "Belum masuk tahap"]].map(
+              ([stage, label]) =>
+                `<option value="${stage}" ${value === stage ? "selected" : ""}>
+                  ${escapeHTML(label)}
+                </option>`
+            ).join("")}
+          </select>`;
+        } else if (key === "note") {
+          input = `<textarea name="${key}" rows="3">${escapeHTML(value)}</textarea>`;
+        } else {
+          input = `<input name="${key}"
+            type="${numericFields.includes(key) ? "number" : "text"}"
+            ${numericFields.includes(key) ? 'min="0" step="any"' : ""}
+            value="${escapeHTML(value)}">`;
+        }
+
+        return `<label class="${key === "note" ? "wide" : ""}">
+          ${escapeHTML(labels[key])}${input}
+        </label>`;
+      }).join("");
+
+      $("editDialog").showModal();
+    }
+
+    $("editForm").onsubmit = async event => {
+      event.preventDefault();
+
+      try {
+        const row = { ...editing };
+
+        for (const [key, value] of new FormData(event.target)) {
+          row[key] = numericFields.includes(key)
+            ? value === "" ? null : Number(value)
+            : value.trim();
+        }
+
+        await applyChanges(
+          [{ row, expectedRev: editing.rev }],
+          "Pengeditan web"
+        );
+
+        $("editDialog").close();
+        toast("Perubahan berhasil disimpan.");
+
+        if (linkedFile) await synchronize();
+      } catch (error) {
+        $("editError").textContent = error.message;
+      }
+    };
+
+    function classifyProcurement(row) {
+      if (text(row[58]) || (row[59] && Number(row[57]) > 0)) return "contract";
+      if (row[54] === true || text(row[55])) return "failed";
+      if (/tidak dapat diproses|belum dapat/i.test(text(row[20]))) return "unstarted";
+      if ([row[30], row[31], row[33], row[46], row[48]].some(Boolean)) {
+        return "execution";
+      }
+      if ([row[21], row[22], row[26], row[28]].some(Boolean)
+          || row[23] === true) return "rks";
+      if (row[16] === true || [row[17], row[18], row[19]].some(Boolean)) return "dd";
+      return "unstarted";
+    }
+
+    function assetName(value) {
+      const name = text(value);
+      return ["PLN UIK DWP", "PLN UIK TJB"].includes(name) ? "PLN" : name;
+    }
+
+    function originalWorkbook(workbook) {
+      const rows = [];
+
+      function sheet(name) {
+        const worksheet = workbook.Sheets[name];
+        if (!worksheet) return [];
+
+        const range = XLSX.utils.decode_range(worksheet["!ref"] || "A1");
+        range.s.r = 0;
+        range.s.c = 0;
+        range.e.c = Math.min(range.e.c, 111);
+
+        return XLSX.utils.sheet_to_json(worksheet, {
+          header: 1, defval: null, raw: true, range
+        });
+      }
+
+      sheet("Summary").forEach((row, index) => {
+        if (index < 2 || !isMine(row[2])) return;
+
+        let allocated = numberOrNull(row[8]);
+        let note = text(row[13]);
+
+        if (normalize(row[2]) === normalize("PT Bukit Asam")
+            && text(row[3]) === "MRC"
+            && allocated === 16885591
+            && row[4] === 13635591 && row[5] === 13635591) {
+          allocated = 13635591;
+          note = "Volume nonpenugasan 3.250.000 MT dikeluarkan.";
+        }
+
+        rows.push({
+          id: `recap:2026:${index}`, type: "recap", year: 2026,
+          mine: text(row[2]), spec: text(row[3]),
+          assigned: numberOrNull(row[4]), confirmed: numberOrNull(row[5]),
+          allocated, inProcess: numberOrNull(row[9]),
+          pending: numberOrNull(row[10]), rejected: numberOrNull(row[11]),
+          note, source: `Summary baris ${index + 1}`
+        });
+      });
+
+      sheet("Gabungan").forEach((row, index) => {
+        if (index < 2 || !isMine(row[15])) return;
+
+        rows.push({
+          id: `supply:2026:${index}`, type: "supply", year: 2026,
+          mine: text(row[15]), plant: text(row[1]),
+          asset: assetName(row[6]), spec: text(row[24]),
+          assigned: numberOrNull(row[22]),
+          confirmed: numberOrNull(row[23]),
+          note: "", source: `Gabungan baris ${index + 1}`
+        });
+      });
+
+      if (workbook.Sheets["Gabungan"]) {
+        sheet("Kebutuhan Batubara 2026").forEach((row, index) => {
+          if (index < 5 || !text(row[2]).toUpperCase().startsWith("PLTU")) return;
+
+          rows.push({
+            id: `need:2026:${index}`, type: "need", year: 2026,
+            plant: text(row[2]), aliases: text(row[1]),
+            asset: assetName(row[32]),
+            lrc: numberOrNull(row[33]), mrc: numberOrNull(row[34]),
+            hrc: numberOrNull(row[35]), note: "",
+            source: `Kebutuhan Batubara 2026 baris ${index + 1}`
+          });
+        });
+      }
+
+      sheet("Pengadaan Batubara").forEach((row, index) => {
+        if (index < 2 || !isMine(row[1])) return;
+
+        rows.push({
+          id: `procurement:2026:${index}`,
+          type: "procurement", year: 2026,
+          mine: text(row[1]), plant: text(row[6]), spec: text(row[8]),
+          volume: numberOrNull(row[5]),
+          stage: classifyProcurement(row),
+          pic: text(row[11]), note: text(row[45]),
+          source: `Pengadaan Batubara baris ${index + 1}`
+        });
+      });
+
+      sheet("Monitoring Pemenuhan 2026").forEach((row, index) => {
+        if (index < 3 || !isMine(row[6])) return;
+
+        const scope = text(row[13]).toUpperCase();
+
+        if (!["PLN GROUP", "IPP TANGGUNG JAWAB PLN"].includes(scope)) return;
+
+        const definitions = [
+          ["B-1839 & B-334", 25, 60],
+          ["B-755", 20, 47],
+          ["B-905", 21, 57],
+          ["B-1282", 24, 64],
+          ["B-1819", 26, 67]
+        ];
+
+        for (const [letter, assignedColumn, confirmedColumn] of definitions) {
+          const assigned = numberOrNull(row[assignedColumn - 1]) || 0;
+          const confirmed =
+            (numberOrNull(row[confirmedColumn - 1]) || 0) +
+            (letter === "B-1819" ? numberOrNull(row[67]) || 0 : 0);
+
+          if (!assigned && !confirmed) continue;
+
+          rows.push({
+            id: `compliance:2026:${index}:${letter}`,
+            type: "compliance", year: 2026,
+            mine: text(row[6]), plant: text(row[12]),
+            asset: assetName(row[14]), spec: text(row[90]),
+            letter, assigned, confirmed, note: text(row[83]),
+            source: `Monitoring Pemenuhan 2026 baris ${index + 1}`
+          });
+        }
+      });
+
+      if (!rows.length) {
+        throw new Error(
+          "Sheet sumber tidak dikenali. Gunakan ketiga Excel sumber " +
+          "atau Excel hasil ekspor aplikasi ini."
+        );
+      }
+
+      return rows;
+    }
+
+    function parseWorkbook(workbook) {
+      const map = new Map(state.rows.map(row => [row.id, row]));
+      const changes = [];
+      const seen = new Set();
+      const standard = !!workbook.Sheets["Data Aplikasi"];
+
+      const incoming = standard
+        ? XLSX.utils.sheet_to_json(workbook.Sheets["Data Aplikasi"], {
+            defval: null, raw: true
+          })
+        : originalWorkbook(workbook);
+
+      for (const input of incoming) {
+        let row = { ...input };
+        const previous = map.get(text(row.id));
+
+        if (standard && !row.id) {
+          row.id = crypto.randomUUID();
+        }
+
+        if (seen.has(row.id)) throw new Error("ID duplikat pada berkas impor.");
+        seen.add(row.id);
+
+        if (standard && previous) {
+          if (!row._base) throw new Error("Kolom _base hilang pada baris lama.");
+
+          const baseline = JSON.parse(row._base);
+
+          if (JSON.stringify(canonical(row)) === JSON.stringify(baseline)) continue;
+
+          if (Number(row.rev) !== previous.rev) {
+            throw new Error(
+              "Konflik versi: " + (row.mine || row.plant) +
+              ". Ekspor ulang data terbaru."
+            );
+          }
+        }
+
+        if (standard && row.id && !previous && Number(row.rev) > 0) {
+          throw new Error("ID lama tidak ditemukan. Untuk baris baru kosongkan id dan rev.");
+        }
+
+        if (!standard && previous &&
+            (normalize(previous.mine || previous.plant) !==
+             normalize(row.mine || row.plant))) {
+          throw new Error(
+            "Susunan baris sumber berubah. Gunakan Excel hasil ekspor aplikasi."
+          );
+        }
+
+        delete row._base;
+        row.year = Number(row.year);
+        validate(row);
+
+        if (previous &&
+            JSON.stringify(canonical(previous)) ===
+            JSON.stringify(canonical(row))) continue;
+
+        changes.push({
+          row: { ...previous, ...row },
+          expectedRev: previous?.rev || 0
+        });
+      }
+
+      return { changes, standard };
+    }
+
+    $("excelInput").onchange = async event => {
+      if (!window.XLSX) {
+        toast("Pustaka Excel belum termuat. Periksa koneksi internet.");
+        return;
+      }
+
+      try {
+        state = await readState();
+
+        for (const file of event.target.files) {
+          const workbook = XLSX.read(await file.arrayBuffer(), {
+            type: "array", cellDates: false
+          });
+
+          const result = parseWorkbook(workbook);
+
+          if (!result.changes.length) {
+            toast(file.name + ": tidak ada perubahan.");
+            continue;
+          }
+
+          const message =
+            file.name + "\n" + result.changes.length +
+            " baris baru/berubah.\n" +
+            (result.standard ? "" :
+              "Berkas sumber asli tidak memiliki baseline versi. " +
+              "Nilainya akan menjadi pembaruan data.\n") +
+            "Terapkan perubahan?";
+
+          if (confirm(message)) {
+            await applyChanges(result.changes, "Impor Excel");
+          }
+        }
+
+        toast("Pemeriksaan impor selesai.");
+      } catch (error) {
+        toast(error.message);
+      }
+
+      event.target.value = "";
+    };
+
+    function createWorkbook() {
+      const workbook = XLSX.utils.book_new();
+
+      const records = state.rows.map(row => ({
+        ...row,
+        _base: JSON.stringify(canonical(row))
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(records);
+
+      if (worksheet["!ref"]) {
+        worksheet["!autofilter"] = { ref: worksheet["!ref"] };
+      }
+
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Data Aplikasi");
+
+      const instructions = [
+        ["Kolom", "Keterangan"],
+        ["id, type, rev, _base", "Jangan diubah pada baris lama."],
+        ["Baris baru", "Isi type dan data; kosongkan id, rev, _base."],
+        ["type", "need, supply, recap, compliance, procurement"],
+        ["assigned / confirmed", "Penugasan / konfirmasi dalam MT"],
+        ["allocated", "Terkontrak dapat dialokasikan dalam MT"],
+        ["inProcess / pending / rejected", "Status proses kontrak dalam MT"],
+        ["volume", "Volume paket pengadaan dalam MT"],
+        ["stage", "dd, rks, execution, failed, contract, unstarted"],
+        ["Penting", "Impor tidak menghapus baris yang tidak ada di berkas."]
+      ];
+
+      XLSX.utils.book_append_sheet(
+        workbook, XLSX.utils.aoa_to_sheet(instructions), "Petunjuk"
+      );
+
+      return workbook;
+    }
+
+    function exportExcel() {
+      if (!window.XLSX) {
+        toast("Pustaka Excel belum termuat.");
+        return;
+      }
+
+      XLSX.writeFile(createWorkbook(), "Monitoring_Batubara.xlsx");
+    }
+
+    function exportJSON() {
+      const payload = JSON.stringify({
+        format: "COAL_COPY_PASTE_V1",
+        exportedAt: new Date().toISOString(),
+        state
+      });
+
+      const url = URL.createObjectURL(new Blob(
+        [payload], { type: "application/json" }
+      ));
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "Cadangan_Monitoring_Batubara.json";
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    $("jsonInput").onchange = async event => {
+      try {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const payload = JSON.parse(await file.text());
+
+        if (payload.format !== "COAL_COPY_PASTE_V1" ||
+            !Array.isArray(payload.state?.rows)) {
+          throw new Error("Format cadangan tidak dikenal.");
+        }
+
+        const ids = new Set();
+
+        for (const row of payload.state.rows) {
+          validate(row);
+          if (!row.id || ids.has(row.id)) throw new Error("ID cadangan tidak valid.");
+          ids.add(row.id);
+        }
+
+        const latest = await readState();
+
+        if (!confirm(
+          "Pulihkan " + payload.state.rows.length + " baris?\n" +
+          "Data browser saat ini akan diganti. " +
+          "Pastikan sudah membuat cadangan jika diperlukan."
+        )) return;
+
+        const revisions = new Map(latest.rows.map(row => [row.id, row.rev]));
+
+        const next = {
+          ...payload.state,
+          version: Math.max(latest.version, payload.state.version || 0) + 1,
+          updatedAt: new Date().toISOString(),
+          rows: payload.state.rows.map(row => ({
+            ...row,
+            rev: Math.max(row.rev || 0, revisions.get(row.id) || 0) + 1
+          })),
+          history: Array.isArray(payload.state.history)
+            ? payload.state.history : []
+        };
+
+        await persist(next, latest.version);
+        state = next;
+        unlinkExcel(false);
+        refreshFilters();
+        render();
+        toast("Cadangan berhasil dipulihkan.");
+      } catch (error) {
+        toast(error.message);
+      }
+
+      event.target.value = "";
+    };
+
+    async function linkExcel() {
+      try {
+        if (!window.showOpenFilePicker) {
+          throw new Error(
+            "Browser tidak mendukung penautan file. Gunakan impor–ekspor Excel."
+          );
+        }
+
+        const [handle] = await showOpenFilePicker({
+          multiple: false,
+          types: [{
+            description: "Excel hasil ekspor aplikasi",
+            accept: {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                [".xlsx"]
+            }
+          }]
+        });
+
+        if (await handle.requestPermission({ mode: "readwrite" }) !== "granted") {
+          throw new Error("Izin baca/tulis belum diberikan.");
+        }
+
+        state = await readState();
+        const file = await handle.getFile();
+        const workbook = XLSX.read(await file.arrayBuffer(), { type: "array" });
+
+        if (!workbook.Sheets["Data Aplikasi"]) {
+          throw new Error("Tautkan hanya Excel hasil ekspor aplikasi ini.");
+        }
+
+        const parsed = parseWorkbook(workbook);
+
+        if (parsed.changes.length) {
+          throw new Error(
+            "File berisi perubahan. Impor dan tinjau terlebih dahulu, lalu tautkan ulang."
+          );
+        }
+
+        linkedFile = handle;
+        linkedStamp = file.lastModified;
+        linkedVersion = -1;
+
+        await synchronize();
+        render();
+        toast("Excel tertaut. Sinkronisasi diperiksa setiap 15 detik.");
+      } catch (error) {
+        if (error.name !== "AbortError") toast(error.message);
+      }
+    }
+
+    function unlinkExcel(notify = true) {
+      linkedFile = null;
+      linkedStamp = 0;
+      linkedVersion = -1;
+      if (notify) {
+        render();
+        toast("Tautan Excel diputus.");
+      }
+    }
+
+    async function synchronize() {
+      if (!linkedFile || syncing || document.querySelector("dialog[open]")) return;
+
+      syncing = true;
+
+      try {
+        state = await readState();
+        const file = await linkedFile.getFile();
+
+        if (file.lastModified !== linkedStamp) {
+          const workbook = XLSX.read(await file.arrayBuffer(), { type: "array" });
+
+          if (!workbook.Sheets["Data Aplikasi"]) {
+            throw new Error("Struktur file tertaut berubah.");
+          }
+
+          const parsed = parseWorkbook(workbook);
+
+          if (parsed.changes.length) {
+            await applyChanges(parsed.changes, "Sinkronisasi Excel");
+          }
+
+          linkedStamp = file.lastModified;
+          linkedVersion = -1;
+        }
+
+        if (linkedVersion !== state.version) {
+          const latestFile = await linkedFile.getFile();
+
+          if (latestFile.lastModified !== linkedStamp) {
+            throw new Error("Excel sedang berubah; tunggu pemeriksaan berikutnya.");
+          }
+
+          const bytes = XLSX.write(createWorkbook(), {
+            bookType: "xlsx", type: "array"
+          });
+
+          const stream = await linkedFile.createWritable();
+          await stream.write(bytes);
+          await stream.close();
+
+          linkedStamp = (await linkedFile.getFile()).lastModified;
+          linkedVersion = state.version;
+        }
+
+        refreshFilters();
+        render();
+      } catch (error) {
+        toast("Sinkronisasi tertahan: " + error.message);
+      } finally {
+        syncing = false;
+      }
+    }
+
+    $("navigation").onclick = event => {
+      const button = event.target.closest("[data-tab]");
+      if (!button) return;
+      tab = button.dataset.tab;
+      page = 0;
+      render();
+    };
+
+    for (const id of ["yearFilter", "specFilter", "searchFilter"]) {
+      $(id).addEventListener(id === "searchFilter" ? "input" : "change", () => {
+        page = 0;
+        render();
+      });
+    }
+
+    document.addEventListener("click", event => {
+      const edit = event.target.closest("[data-edit]");
+      if (edit) {
+        openEdit(edit.dataset.edit);
+        return;
+      }
+
+      const detail = event.target.closest("[data-detail]");
+      if (detail) {
+        openDetail(detail.dataset.detail);
+        return;
+      }
+
+      const plant = event.target.closest("[data-plant]");
+      if (plant) {
+        const group = plantRows().find(row => row.key === plant.dataset.plant);
+        if (group) showDetailTable(group.plant, group.supplies);
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      const target = event.target.closest("[data-detail]");
+      if (target && target.tagName.toLowerCase() !== "button" &&
+          ["Enter", " "].includes(event.key)) {
+        event.preventDefault();
+        openDetail(target.dataset.detail);
+      }
+    });
+
+    async function initialize() {
+      try {
+        database = await openDatabase();
+        state = await readState();
+        refreshFilters();
+        render();
+      } catch (error) {
+        $("storageStatus").textContent = "Penyimpanan browser tidak tersedia.";
+        $("content").innerHTML = `<div class="notice">
+          ${escapeHTML(error.message)}
+          Buka menggunakan Chrome/Edge pada profil normal dan izinkan
+          penyimpanan browser.
+        </div>`;
+      }
+    }
+
+    setInterval(async () => {
+      if (!database || document.querySelector("dialog[open]")) return;
+
+      try {
+        if (linkedFile) {
+          await synchronize();
+        } else {
+          const latest = await readState();
+          if (latest.version !== state.version) {
+            state = latest;
+            refreshFilters();
+            render();
+          }
+        }
+      } catch (error) {
+        toast(error.message);
+      }
+    }, 15000);
+
+    initialize();
+  </script>
+</body>
+</html>
